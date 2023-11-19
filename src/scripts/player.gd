@@ -52,7 +52,7 @@ func swing(delta):
 	var r = self.hook.position - self.position
 	var rLength = int(round(r.length()))
 	
-	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / rLength
+	self.angularAcceleration = (-1 * gravity/2 * delta * sin(self.angle)) / rLength
 	self.angularVelocity += self.angularAcceleration
 	self.angularVelocity *= DAMPING
 	self.angle += self.angularVelocity
@@ -64,6 +64,8 @@ func _process(delta):
 		if not self.hook:
 			self.hook = hookScene.instantiate()
 			self.hook.position = self.position
+			var direction = Input.get_axis("ui_left", "ui_right")
+			self.hook.set_direction(direction)
 			var levelNode = get_tree().get_root().get_node("level")
 			levelNode.add_child(self.hook)
 			
@@ -75,6 +77,7 @@ func _process(delta):
 	elif Input.is_action_just_released("hook"):
 		self.hook.queue_free()
 		self.state = STATES.UNHOOKED
+		firstFlag = true
 			
 func _draw():
 	if self.hook:
