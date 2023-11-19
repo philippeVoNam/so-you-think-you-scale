@@ -7,7 +7,7 @@ var hookScene = preload("res://src/scenes/hook.tscn")
 var hook = null
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -500.0
+const JUMP_VELOCITY = -600.0
 
 const DAMPING = 0.995
 
@@ -15,10 +15,12 @@ var angularAcceleration = 0
 var angularVelocity = 0
 var angle = 0
 
+var firstFlag = true
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-func _physics_process(delta):
+func _physics_process(delta):		
 	match state:
 		STATES.UNHOOKED:
 			# Add the gravity.
@@ -41,34 +43,46 @@ func _physics_process(delta):
 			
 		STATES.HOOKED:
 			self.swing(delta)
+			move_and_slide()
 	
 func _input(event):
-	if event is InputEventKey:
-		if Input.is_key_pressed(KEY_C):
-			if self.hook:
-				self.hook.queue_free()
-				
-			self.hook = hookScene.instantiate()
-			self.hook.position = self.position
-			var levelNode = get_tree().get_root().get_node("level")
-			levelNode.add_child(self.hook)
+	pass
 
 func swing(delta):
 	var r = self.hook.position - self.position
-	self.angle = atan2(r.y, r.x)
+	var rLength = int(round(r.length()))
 	
-	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / r.length()
+	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / rLength
 	self.angularVelocity += self.angularAcceleration
 	self.angularVelocity *= DAMPING
 	self.angle += self.angularVelocity
 	
-	self.position = self.hook.position + Vector2(r.length() * sin(self.angle), r.length() * cos(self.angle))
-
+	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
+ 
 func _process(delta):
-	if self.hook:
-		if self.hook.hooked:
-			self.state = STATES.HOOKED
+	if Input.is_action_pressed("hook"):
+		if not self.hook:
+			self.hook = hookScene.instantiate()
+			self.hook.position = self.position
+			var levelNode = get_tree().get_root().get_node("level")
+			levelNode.add_child(self.hook)
+			
+		else:
+			if self.hook.hooked:
+				self.state = STATES.HOOKED
+				self.set_initial_angle()
+				
+	elif Input.is_action_just_released("hook"):
+		self.hook.queue_free()
+		self.state = STATES.UNHOOKED
 			
 func _draw():
 	if self.hook:
 		draw_line(self.hook.position, self.position, Color.WHITE, 3.0)
+		
+func set_initial_angle():
+	if firstFlag:
+		# set initial angle
+		var r = self.hook.position - self.position
+		self.angle = atan2(r.y, r.x)
+		firstFlag = false
