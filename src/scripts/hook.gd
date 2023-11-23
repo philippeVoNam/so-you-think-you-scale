@@ -1,6 +1,6 @@
 extends Area2D
 
-var speed = 1700
+var speed = 5000
 var hooked = false
 
 var direction = 1

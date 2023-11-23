@@ -6,14 +6,15 @@ var state = STATES.UNHOOKED
 var hookScene = preload("res://src/scenes/hook.tscn")
 var hook = null
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -600.0
+const SPEED = 500.0
+const JUMP_VELOCITY = -1000.0
 
-const DAMPING = 0.995
+const DAMPING = 1
 
 var angularAcceleration = 0
 var angularVelocity = 0
 var angle = 0
+var r = 0
 
 var firstFlag = true
 
@@ -49,10 +50,9 @@ func _input(event):
 	pass
 
 func swing(delta):
-	var r = self.hook.position - self.position
-	var rLength = int(round(r.length()))
+	var rLength = int(round(self.r.length()))
 	
-	self.angularAcceleration = (-1 * gravity/2 * delta * sin(self.angle)) / rLength
+	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / rLength 
 	self.angularVelocity += self.angularAcceleration
 	self.angularVelocity *= DAMPING
 	self.angle += self.angularVelocity
@@ -78,6 +78,10 @@ func _process(delta):
 		self.hook.queue_free()
 		self.state = STATES.UNHOOKED
 		firstFlag = true
+		
+		# keep velocity of swing
+		velocity = Vector2(self.angularVelocity * cos(self.angle), self.angularVelocity * sin(self.angle))
+		print(velocity)
 			
 func _draw():
 	if self.hook:
@@ -86,6 +90,7 @@ func _draw():
 func set_initial_angle():
 	if firstFlag:
 		# set initial angle
-		var r = self.hook.position - self.position
+		self.r = self.hook.position - self.position
+		self.angularVelocity = 0.1
 		self.angle = atan2(r.y, r.x)
 		firstFlag = false
