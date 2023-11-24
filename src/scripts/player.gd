@@ -6,8 +6,8 @@ var state = STATES.UNHOOKED
 var hookScene = preload("res://src/scenes/hook.tscn")
 var hook = null
 
-const SPEED = 500.0
-const JUMP_VELOCITY = -1000.0
+const SPEED = 1000.0
+const JUMP_VELOCITY = -2000.0
 
 const DAMPING = 1
 
@@ -15,6 +15,8 @@ var angularAcceleration = 0
 var angularVelocity = 0
 var angle = 0
 var r = 0
+var momentum = Vector2(0,0)
+var lastHookedVelocity = Vector2(0,0)
 
 var firstFlag = true
 
@@ -26,7 +28,7 @@ func _physics_process(delta):
 		STATES.UNHOOKED:
 			# Add the gravity.
 			if not is_on_floor():
-				velocity.y += gravity * delta
+				velocity.y += gravity * delta * 4
 
 			# Handle Jump.
 			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -38,8 +40,9 @@ func _physics_process(delta):
 			if direction:
 				velocity.x = direction * SPEED
 			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-
+				if is_on_floor():
+					velocity.x = move_toward(velocity.x, 0, SPEED)
+			
 			move_and_slide()
 			
 		STATES.HOOKED:
@@ -52,12 +55,13 @@ func _input(event):
 func swing(delta):
 	var rLength = int(round(self.r.length()))
 	
-	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / rLength 
+	self.angularAcceleration = (-1 * gravity/3 * delta * sin(self.angle)) / rLength 
 	self.angularVelocity += self.angularAcceleration
 	self.angularVelocity *= DAMPING
 	self.angle += self.angularVelocity
 	
 	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
+	print(velocity)
  
 func _process(delta):
 	if Input.is_action_pressed("hook"):
@@ -76,21 +80,23 @@ func _process(delta):
 				
 	elif Input.is_action_just_released("hook"):
 		self.hook.queue_free()
-		self.state = STATES.UNHOOKED
+		
 		firstFlag = true
 		
-		# keep velocity of swing
-		velocity = Vector2(self.angularVelocity * cos(self.angle), self.angularVelocity * sin(self.angle))
-		print(velocity)
-			
-func _draw():
-	if self.hook:
-		draw_line(self.hook.position, self.position, Color.WHITE, 3.0)
+		# add impulse
+		var direction = Input.get_axis("ui_left", "ui_right")
+		velocity += Vector2(direction * 500,-1550)
+		self.state = STATES.UNHOOKED
 		
 func set_initial_angle():
 	if firstFlag:
 		# set initial angle
-		self.r = self.hook.position - self.position
+		var direction = Input.get_axis("ui_left", "ui_right")
+		if direction == 1:
+			self.r = self.hook.position - self.position
+		else:
+			self.r = self.position - self.hook.position
+			
 		self.angularVelocity = 0.1
 		self.angle = atan2(r.y, r.x)
 		firstFlag = false

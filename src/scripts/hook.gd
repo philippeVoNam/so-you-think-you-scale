@@ -19,4 +19,3 @@ func _on_body_entered(body):
 
 func set_direction(direction):
 	self.direction = direction
- 
