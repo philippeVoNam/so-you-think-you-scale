@@ -7,7 +7,7 @@ var hookScene = preload("res://src/scenes/hook.tscn")
 var hook = null
 
 const SPEED = 1000.0
-const JUMP_VELOCITY = -2000.0
+const JUMP_VELOCITY = -1800.0
 
 const DAMPING = 1
 
@@ -20,19 +20,27 @@ var lastHookedVelocity = Vector2(0,0)
 
 var firstFlag = true
 
+var jumpCharges = 0
+var maxJumpCharges = 1
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _physics_process(delta):		
 	match state:
 		STATES.UNHOOKED:
+			if is_on_floor():
+				jumpCharges = maxJumpCharges # # refresh jump on hook
+				
 			# Add the gravity.
 			if not is_on_floor():
 				velocity.y += gravity * delta * 4
 
 			# Handle Jump.
-			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-				velocity.y = JUMP_VELOCITY
+			if Input.is_action_just_pressed("ui_accept"):
+				if jumpCharges > 0:
+					jumpCharges -= 1
+					velocity.y = JUMP_VELOCITY
 
 			# Get the input direction and handle the movement/deceleration.
 			# As good practice, you should replace UI actions with custom gameplay actions.
@@ -46,6 +54,7 @@ func _physics_process(delta):
 			move_and_slide()
 			
 		STATES.HOOKED:
+			jumpCharges = maxJumpCharges # refresh jump on hook
 			self.swing(delta)
 			move_and_slide()
 	
@@ -79,12 +88,14 @@ func _process(delta):
 				
 	elif Input.is_action_just_released("hook"):
 		self.hook.queue_free()
-		self.state = STATES.UNHOOKED
 		firstFlag = true
 		
-		# add impulse
-		var direction = Input.get_axis("ui_left", "ui_right")
-		velocity = Vector2(direction * 500,-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
+		if self.state == STATES.HOOKED:
+			# add impulse
+			var direction = Input.get_axis("ui_left", "ui_right")
+			velocity = Vector2(direction * 500,-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
+			
+			self.state = STATES.UNHOOKED
 		
 func init_hook():
 	if firstFlag:
