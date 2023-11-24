@@ -75,7 +75,7 @@ func _process(delta):
 		else:
 			if self.hook.hooked:
 				self.state = STATES.HOOKED
-				self.set_initial_angle()
+				self.init_hook()
 				
 	elif Input.is_action_just_released("hook"):
 		self.hook.queue_free()
@@ -86,15 +86,18 @@ func _process(delta):
 		var direction = Input.get_axis("ui_left", "ui_right")
 		velocity = Vector2(direction * 500,-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
 		
-func set_initial_angle():
+func init_hook():
 	if firstFlag:
 		# set initial angle
 		var direction = Input.get_axis("ui_left", "ui_right")
 		if direction == 1:
 			self.r = self.hook.position - self.position
+			self.angle = atan2(r.y, r.x)
+			self.angularVelocity = 0.1
+
 		else:
 			self.r = self.position - self.hook.position
-			
-		self.angularVelocity = 0.1
-		self.angle = atan2(r.y, r.x)
+			self.angle = atan2(r.y, r.x)
+			self.angularVelocity = -0.1
+
 		firstFlag = false
