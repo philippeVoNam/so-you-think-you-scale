@@ -61,7 +61,6 @@ func swing(delta):
 	self.angle += self.angularVelocity
 	
 	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
-	print(velocity)
  
 func _process(delta):
 	if Input.is_action_pressed("hook"):
@@ -80,13 +79,12 @@ func _process(delta):
 				
 	elif Input.is_action_just_released("hook"):
 		self.hook.queue_free()
-		
+		self.state = STATES.UNHOOKED
 		firstFlag = true
 		
 		# add impulse
 		var direction = Input.get_axis("ui_left", "ui_right")
-		velocity += Vector2(direction * 500,-1550)
-		self.state = STATES.UNHOOKED
+		velocity = Vector2(direction * 500,-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
 		
 func set_initial_angle():
 	if firstFlag:
