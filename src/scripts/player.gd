@@ -23,6 +23,11 @@ var firstFlag = true
 var jumpCharges = 0
 var maxJumpCharges = 1
 
+# speed boost if player is able to not touch the ground and keep swinging
+var speedMult = 0
+var speedStep = 0.1
+var speedIncrease = 0.1
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -31,6 +36,7 @@ func _physics_process(delta):
 		STATES.UNHOOKED:
 			if is_on_floor():
 				jumpCharges = maxJumpCharges # # refresh jump on hook
+				speedMult = 0 # reset speed mult
 				
 			# Add the gravity.
 			if not is_on_floor():
@@ -98,7 +104,7 @@ func _process(delta):
 		if self.state == STATES.HOOKED:
 			# add impulse
 			var direction = Input.get_axis("ui_left", "ui_right")
-			velocity = Vector2(direction * 500,-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
+			velocity = Vector2(direction * (500 + (speedStep * (speedMult * 2))),-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
 			
 			self.state = STATES.UNHOOKED
 		
@@ -109,13 +115,15 @@ func init_hook():
 		if direction == 1:
 			self.r = self.hook.position - self.position
 			self.angle = atan2(r.y, r.x)
-			self.angularVelocity = 0.1
+			self.angularVelocity = 0.1 + (speedStep * speedMult)
 
 		else:
 			self.r = self.position - self.hook.position
 			self.angle = atan2(r.y, r.x)
-			self.angularVelocity = -0.1
-
+			self.angularVelocity = -1 * (0.1 + (speedStep * speedMult))
+		
+		speedMult += speedIncrease
+		print(speedMult)
 		firstFlag = false
 		
 func _draw():
