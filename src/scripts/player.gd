@@ -56,6 +56,7 @@ func _physics_process(delta):
 		STATES.HOOKED:
 			jumpCharges = maxJumpCharges # refresh jump on hook
 			self.swing(delta)
+			queue_redraw()
 			move_and_slide()
 	
 func _input(event):
@@ -87,7 +88,11 @@ func _process(delta):
 				self.init_hook()
 				
 	elif Input.is_action_just_released("hook"):
-		self.hook.queue_free()
+		if self.hook:
+			if is_instance_valid(self.hook):
+				self.hook.queue_free()
+			self.hook = null
+			queue_redraw()
 		firstFlag = true
 		
 		if self.state == STATES.HOOKED:
@@ -112,3 +117,8 @@ func init_hook():
 			self.angularVelocity = -0.1
 
 		firstFlag = false
+		
+func _draw():
+	if self.hook:
+		var hookLine = self.hook.position - self.position
+		draw_line(Vector2.ZERO, hookLine * 2, Color.AQUAMARINE, 8)
