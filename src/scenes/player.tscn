@@ -16,3 +16,9 @@ texture = ExtResource("1_wcd04")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_uidrg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(2, 0)
+zoom = Vector2(0.25, 0.25)
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
