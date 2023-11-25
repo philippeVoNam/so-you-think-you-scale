@@ -6,28 +6,47 @@ var state = STATES.UNHOOKED
 var hookScene = preload("res://src/scenes/hook.tscn")
 var hook = null
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -500.0
+const SPEED = 1000.0
+const JUMP_VELOCITY = -1800.0
 
-const DAMPING = 0.995
+const DAMPING = 1
 
 var angularAcceleration = 0
 var angularVelocity = 0
 var angle = 0
+var r = 0
+var momentum = Vector2(0,0)
+var lastHookedVelocity = Vector2(0,0)
+
+var firstFlag = true
+
+var jumpCharges = 0
+var maxJumpCharges = 1
+
+# speed boost if player is able to not touch the ground and keep swinging
+var speedMult = 0
+var speedStep = 0.1
+var speedIncrease = 0.1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-func _physics_process(delta):
+func _physics_process(delta):		
 	match state:
 		STATES.UNHOOKED:
+			if is_on_floor():
+				jumpCharges = maxJumpCharges # # refresh jump on hook
+				speedMult = 0 # reset speed mult
+				
 			# Add the gravity.
 			if not is_on_floor():
-				velocity.y += gravity * delta
+				velocity.y += gravity * delta * 4
 
 			# Handle Jump.
-			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-				velocity.y = JUMP_VELOCITY
+			if Input.is_action_just_pressed("ui_accept"):
+				if jumpCharges > 0:
+					jumpCharges -= 1
+					velocity.y = JUMP_VELOCITY
 
 			# Get the input direction and handle the movement/deceleration.
 			# As good practice, you should replace UI actions with custom gameplay actions.
@@ -35,40 +54,79 @@ func _physics_process(delta):
 			if direction:
 				velocity.x = direction * SPEED
 			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-
+				if is_on_floor():
+					velocity.x = move_toward(velocity.x, 0, SPEED)
+			
 			move_and_slide()
 			
 		STATES.HOOKED:
+			jumpCharges = maxJumpCharges # refresh jump on hook
 			self.swing(delta)
+			queue_redraw()
+			move_and_slide()
 	
 func _input(event):
-	if event is InputEventKey:
-		if Input.is_key_pressed(KEY_C):
-			if self.hook:
-				self.hook.queue_free()
-				
-			self.hook = hookScene.instantiate()
-			self.hook.position = self.position
-			var levelNode = get_tree().get_root().get_node("level")
-			levelNode.add_child(self.hook)
+	pass
 
 func swing(delta):
-	var r = self.hook.position - self.position
-	self.angle = atan2(r.y, r.x)
+	var rLength = int(round(self.r.length()))
 	
-	self.angularAcceleration = (-1 * gravity * delta * sin(self.angle)) / r.length()
+	self.angularAcceleration = (-1 * gravity/3 * delta * sin(self.angle)) / rLength 
 	self.angularVelocity += self.angularAcceleration
 	self.angularVelocity *= DAMPING
 	self.angle += self.angularVelocity
 	
-	self.position = self.hook.position + Vector2(r.length() * sin(self.angle), r.length() * cos(self.angle))
-
+	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
+ 
 func _process(delta):
-	if self.hook:
+	if Input.is_action_just_pressed("hook"):
+		if not self.hook:
+			self.hook = hookScene.instantiate()
+			self.hook.position = self.position
+			var direction = Input.get_axis("ui_left", "ui_right")
+			self.hook.set_direction(direction)
+			var levelNode = get_tree().get_root().get_node("level")
+			levelNode.add_child(self.hook)
+
+	elif Input.is_action_just_released("hook"):
+		if self.hook:
+			if is_instance_valid(self.hook):
+				self.hook.queue_free()
+			self.hook = null
+			queue_redraw()
+		firstFlag = true
+		
+		if self.state == STATES.HOOKED:
+			# add impulse
+			var direction = Input.get_axis("ui_left", "ui_right")
+			velocity = Vector2(direction * (500 + (speedStep * (speedMult * 2))),-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
+			
+			self.state = STATES.UNHOOKED
+			
+	if is_instance_valid(self.hook):
 		if self.hook.hooked:
 			self.state = STATES.HOOKED
-			
+			self.init_hook()
+		
+func init_hook():
+	if firstFlag:
+		# set initial angle
+		var direction = Input.get_axis("ui_left", "ui_right")
+		if direction == 1:
+			self.r = self.hook.position - self.position
+			self.angle = atan2(r.y, r.x)
+			self.angularVelocity = 0.1 + (speedStep * speedMult)
+
+		else:
+			self.r = self.position - self.hook.position
+			self.angle = atan2(r.y, r.x)
+			self.angularVelocity = -1 * (0.1 + (speedStep * speedMult))
+		
+		speedMult += speedIncrease
+		print(speedMult)
+		firstFlag = false
+		
 func _draw():
 	if self.hook:
-		draw_line(self.hook.position, self.position, Color.WHITE, 3.0)
+		var hookLine = self.hook.position - self.position
+		draw_line(Vector2.ZERO, hookLine * 2, Color.AQUAMARINE, 8)

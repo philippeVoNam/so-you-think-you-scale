@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfxtw6rejmdp1"]
+
+[ext_resource type="Script" path="res://src/scripts/snow.gd" id="1_qxdgm"]
+[ext_resource type="Texture2D" uid="uid://bh0j8cvb02t5o" path="res://assets/pixel-adventure/Other/Dust Particle.png" id="1_yjnem"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ba8it"]
+
+[node name="Snow" type="Area2D"]
+script = ExtResource("1_qxdgm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ba8it")
+
+[node name="DustParticle" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_yjnem")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
