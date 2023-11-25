@@ -10,8 +10,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	await get_tree().create_timer(3.0).timeout # waits for 1 second
-	generate_snow()
+#	await get_tree().create_timer(3.0).timeout # waits for 1 second
+#	generate_snow()
+	pass
 	
 func generate_snow():
 	self.snow = snowScene.instantiate()

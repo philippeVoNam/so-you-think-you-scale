@@ -9,7 +9,7 @@ var hook = null
 const SPEED = 1000.0
 const JUMP_VELOCITY = -1800.0
 
-const DAMPING = 1
+const DAMPING = 0.995
 
 var angularAcceleration = 0
 var angularVelocity = 0
@@ -79,6 +79,7 @@ func swing(delta):
 	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
  
 func _process(delta):
+	queue_redraw()
 	if Input.is_action_just_pressed("hook"):
 		if not self.hook:
 			self.hook = hookScene.instantiate()
@@ -123,10 +124,9 @@ func init_hook():
 			self.angularVelocity = -1 * (0.1 + (speedStep * speedMult))
 		
 		speedMult += speedIncrease
-		print(speedMult)
 		firstFlag = false
 		
 func _draw():
-	if self.hook:
+	if is_instance_valid(self.hook):
 		var hookLine = self.hook.position - self.position
 		draw_line(Vector2.ZERO, hookLine * 2, Color.AQUAMARINE, 8)
