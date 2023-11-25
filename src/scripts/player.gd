@@ -79,7 +79,7 @@ func swing(delta):
 	self.position = self.hook.position + Vector2(rLength * sin(self.angle), rLength * cos(self.angle))
  
 func _process(delta):
-	if Input.is_action_pressed("hook"):
+	if Input.is_action_just_pressed("hook"):
 		if not self.hook:
 			self.hook = hookScene.instantiate()
 			self.hook.position = self.position
@@ -87,12 +87,7 @@ func _process(delta):
 			self.hook.set_direction(direction)
 			var levelNode = get_tree().get_root().get_node("level")
 			levelNode.add_child(self.hook)
-			
-		else:
-			if self.hook.hooked:
-				self.state = STATES.HOOKED
-				self.init_hook()
-				
+
 	elif Input.is_action_just_released("hook"):
 		if self.hook:
 			if is_instance_valid(self.hook):
@@ -107,6 +102,11 @@ func _process(delta):
 			velocity = Vector2(direction * (500 + (speedStep * (speedMult * 2))),-1550) # we dont do += because we want it to always be this impulse as the first velocity for it, the gravity will take care of the rest after
 			
 			self.state = STATES.UNHOOKED
+			
+	if is_instance_valid(self.hook):
+		if self.hook.hooked:
+			self.state = STATES.HOOKED
+			self.init_hook()
 		
 func init_hook():
 	if firstFlag:
