@@ -26,7 +26,7 @@ var maxJumpCharges = 1
 # speed boost if player is able to not touch the ground and keep swinging
 var speedMult = 0
 var speedStep = 0.1
-var speedIncrease = 0.1
+var speedIncrease = 0.01
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
