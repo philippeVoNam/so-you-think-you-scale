@@ -86,7 +86,7 @@ func _process(delta):
 			self.hook.position = self.position
 			var direction = Input.get_axis("ui_left", "ui_right")
 			self.hook.set_direction(direction)
-			var levelNode = get_tree().get_root().get_node("level")
+			var levelNode = get_tree().get_root().get_node("world/level")
 			levelNode.add_child(self.hook)
 
 	elif Input.is_action_just_released("hook"):

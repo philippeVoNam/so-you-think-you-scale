@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ca8cy568n7xh6"]
+[gd_scene load_steps=5 format=3 uid="uid://ca8cy568n7xh6"]
 
 [ext_resource type="Script" path="res://src/scripts/player.gd" id="1_nhewp"]
 [ext_resource type="Texture2D" uid="uid://c32l5g5lnei56" path="res://assets/gdquest/player.png" id="1_wcd04"]
+[ext_resource type="Texture2D" uid="uid://gb7f1uep7fg5" path="res://assets/gdquest/enemy.png" id="3_1e23p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uidrg"]
 size = Vector2(80, 88)
@@ -19,6 +20,12 @@ shape = SubResource("RectangleShape2D_uidrg")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -1562)
-zoom = Vector2(0.25, 0.25)
+zoom = Vector2(0.3, 0.3)
 position_smoothing_enabled = true
 rotation_smoothing_enabled = true
+
+[node name="robot" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-104, -110)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_1e23p")
