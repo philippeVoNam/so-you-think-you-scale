@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy3swasnel3im"]
+
+[ext_resource type="Script" path="res://src/scripts/start.gd" id="1_rg6l8"]
+[ext_resource type="Texture2D" uid="uid://8saih2ux80q6" path="res://assets/gdquest/portal.png" id="2_5mnpc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7awgs"]
+
+[node name="start" type="RigidBody2D"]
+script = ExtResource("1_rg6l8")
+
+[node name="Portal" type="Sprite2D" parent="."]
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_5mnpc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(5, 5)
+shape = SubResource("CapsuleShape2D_7awgs")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

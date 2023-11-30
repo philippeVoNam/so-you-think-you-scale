@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgy167hijrsxf"]
+
+[ext_resource type="Texture2D" uid="uid://gb7f1uep7fg5" path="res://assets/gdquest/enemy.png" id="1_jhulh"]
+
+[node name="robot" type="Area2D"]
+
+[node name="sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_jhulh")
