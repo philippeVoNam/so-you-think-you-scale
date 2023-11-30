@@ -222,16 +222,21 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 70.0
 offset_top = 100.0
-offset_right = 211.0
-offset_bottom = 153.0
+offset_right = 513.0
+offset_bottom = 206.0
 
 [node name="timer_label" type="Label" parent="canvas/control/container"]
+layout_mode = 2
+
+[node name="distance_label" type="Label" parent="canvas/control/container"]
 layout_mode = 2
 
 [node name="reminder_label" type="Label" parent="canvas/control/container"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.32549, 0.2, 0.419608, 1)
-text = "press [ c ] to  hook"
+text = "press [ c ] to  hook
+combine with arrow keys 
+to change the angle of the hook"
 
 [node name="center_container" type="CenterContainer" parent="canvas/control"]
 visible = false

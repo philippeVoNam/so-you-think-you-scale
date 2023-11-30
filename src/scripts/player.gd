@@ -141,7 +141,7 @@ func _draw():
 		
 func display_msg(yPos):
 	if abs(yPos) == 5000:
-		await self.levelNode.display_msg("Well will you look at that, the first subject to be able to pass the 5000 mark", 0.05, 0.7, 0.01)
+		await self.levelNode.display_msg("Well will you look at that, the first subject to be able to pass the 500 m mark", 0.05, 0.7, 0.01)
 		await self.levelNode.display_msg("Just kidding, 98% of our subjects achieve this. Please procede", 0.05, 0.7, 0.01)
 	elif abs(yPos) == 12500:
 		await self.levelNode.display_msg("Here is a joke we thought you would like", 0.01, 0.7, 0.01)

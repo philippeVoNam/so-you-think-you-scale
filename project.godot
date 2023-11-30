@@ -30,4 +30,5 @@ hook={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0.105882, 0.0666667, 0.172549, 1)

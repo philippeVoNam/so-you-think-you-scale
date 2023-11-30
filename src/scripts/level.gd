@@ -5,6 +5,7 @@ var snowScene = preload("res://src/scenes/snow.tscn")
 var playerNode = null
 var startNode = null
 var timerLabelNode = null
+var distanceLabelNode = null
 var msgLabelNode = null
 var centerContainerNode = null
 var snow = null
@@ -13,6 +14,8 @@ var _timer = null
 var timeReachGoal = 0
 var timeStart = 0
 var elaspedTime = 0
+
+var distance = 0
 
 var mutex = null
 var voice_id = 0
@@ -27,6 +30,7 @@ func _ready():
 	playerNode = get_tree().get_root().get_node("world/level/player")
 	startNode = get_tree().get_root().get_node("world/level/start")
 	timerLabelNode = get_tree().get_root().get_node("world/canvas/control/container/timer_label")
+	distanceLabelNode = get_tree().get_root().get_node("world/canvas/control/container/distance_label")
 	msgLabelNode = get_tree().get_root().get_node("world/canvas/control/center_container/msg_label")
 	centerContainerNode = get_tree().get_root().get_node("world/canvas/control/center_container")
 	_timer = get_tree().get_root().get_node("world/Timer")
@@ -103,4 +107,11 @@ func _on_timer_timeout():
 		elaspedTime = Time.get_unix_time_from_system() - timeStart
 #		elaspedTime = snapped(elaspedTime, 0.01)
 		elaspedTime = int(elaspedTime)
-		timerLabelNode.text = str(elaspedTime)
+		timerLabelNode.text = str(elaspedTime) + " s"
+		
+		if playerNode.position.y > 0:
+			distance = 0
+		else:
+			distance = snapped(abs(playerNode.position.y) / 10, 1)
+			
+		distanceLabelNode.text = str(distance) + " m"
