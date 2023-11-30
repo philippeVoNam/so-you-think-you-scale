@@ -37,7 +37,7 @@ func _ready():
 	var voices = DisplayServer.tts_get_voices_for_language("en")
 	voice_id = voices[1]
 	
-#	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1).timeout
 	await self.display_msg("Welcome test subject # 15042 to the Science Culture Activities Learning Environement. S.C.A.L.E for short", 0.05, 2, 0.01)
 	await self.display_msg("Do not worry, you are perfectly safe. Comply with our instructions and everything will be okay", 0.05, 2, 0.01)
 	await self.display_msg("We care about you deeply, [subject name here]", 0.01, 2, 0.01)
