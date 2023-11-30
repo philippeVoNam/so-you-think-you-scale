@@ -13,4 +13,5 @@ func _process(delta):
 
 func _on_body_entered(body):
 	if body.get_name() == "player":
+		body.display_msg(99999)
 		levelNode.finished()

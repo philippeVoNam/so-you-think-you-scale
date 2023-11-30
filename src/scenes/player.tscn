@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca8cy568n7xh6"]
+[gd_scene load_steps=6 format=3 uid="uid://ca8cy568n7xh6"]
 
 [ext_resource type="Script" path="res://src/scripts/player.gd" id="1_nhewp"]
 [ext_resource type="Texture2D" uid="uid://c32l5g5lnei56" path="res://assets/gdquest/player.png" id="1_wcd04"]
 [ext_resource type="Texture2D" uid="uid://gb7f1uep7fg5" path="res://assets/gdquest/enemy.png" id="3_1e23p"]
+[ext_resource type="AudioStream" uid="uid://b5ymtynamgqb1" path="res://assets/kenney_interface-sounds/Audio/bong_001.ogg" id="4_hx8v2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uidrg"]
 size = Vector2(80, 88)
@@ -29,3 +30,6 @@ visible = false
 position = Vector2(-104, -110)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_1e23p")
+
+[node name="Sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_hx8v2")

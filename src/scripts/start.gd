@@ -1,4 +1,4 @@
-extends Area2D
+extends RigidBody2D
 
 var levelNode = null
 var enable = true
@@ -14,7 +14,7 @@ func _process(delta):
 func _on_body_entered(body):
 	if enable:
 		if body.get_name() == "player":
-			levelNode.start()
+#			levelNode.start()
 			enable = false
 		
 func renable():
