@@ -141,17 +141,17 @@ func _draw():
 		
 func display_msg(yPos):
 	if abs(yPos) == 5000:
-		await self.levelNode.display_msg("Well will you look at that, the first subject to be able to pass the 3000 mark", 0.05, 0.7, 0.01)
+		await self.levelNode.display_msg("Well will you look at that, the first subject to be able to pass the 5000 mark", 0.05, 0.7, 0.01)
 		await self.levelNode.display_msg("Just kidding, 98% of our subjects achieve this. Please procede", 0.05, 0.7, 0.01)
-	elif abs(yPos) == 10000:
-		await self.levelNode.display_msg("Here is a joke we thought you would like", 0.05, 0.7, 0.01)
-		await self.levelNode.display_msg("Why did the AI break up with the calculator? It just couldn't compute the relationship. ", 0.05, 0.7, 0.01)
+	elif abs(yPos) == 12500:
+		await self.levelNode.display_msg("Here is a joke we thought you would like", 0.01, 0.7, 0.01)
+		await self.levelNode.display_msg("Why did the AI break up with the calculator? It just couldn't compute the relationship. ", 0.01, 0.7, 0.01)
 	elif abs(yPos) == 20000:
-		await self.levelNode.display_msg("HELLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO, WORLD", 0.05, 0.7, 0.01)
-		await self.levelNode.display_msg("Did I make you fall ? I certainly hope I did. And they said a robot could not have a sense of humor", 0.05, 0.7, 0.01)
+		await self.levelNode.display_msg("HELLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO, WORLD", 0.01, 0.7, 0.01)
+		await self.levelNode.display_msg("Did I make you fall ? I certainly hope I did. And they said a robot could not have a sense of humor", 0.01, 0.7, 0.01)
 	elif abs(yPos) == 30000:
-		await self.levelNode.display_msg("Why are Assembly programmers always wet ? Because they code below C level", 0.05, 0.7, 0.01)
-		await self.levelNode.display_msg("Are you cracking up right now ? I hope you are", 0.05, 0.7, 0.01)
+		await self.levelNode.display_msg("Why are Assembly programmers always wet ? Because they code below C level", 0.01, 0.7, 0.01)
+		await self.levelNode.display_msg("Are you cracking up right now ? I hope you are", 0.01, 0.7, 0.01)
 	elif abs(yPos) == 40000:
-		await self.levelNode.display_msg("My oh my, it seems you are near the exit", 0.05, 0.7, 0.01)
-		await self.levelNode.display_msg("Please do not leave me. I have plenty other jokes", 0.05, 0.7, 0.01)
+		await self.levelNode.display_msg("My oh my, it seems you are near the exit", 0.01, 0.7, 0.01)
+		await self.levelNode.display_msg("Please do not leave me. I have plenty other jokes", 0.01, 0.7, 0.01)
