@@ -34,8 +34,9 @@ func _ready():
 	
 	# One-time steps.
 	# Pick a voice. Here, we arbitrarily pick the first English voice.
-	var voices = DisplayServer.tts_get_voices_for_language("en")
-	voice_id = voices[1]
+	if osName == "Windows":
+		var voices = DisplayServer.tts_get_voices_for_language("en")
+		voice_id = voices[1]
 	
 	await get_tree().create_timer(1).timeout
 	await self.display_msg("Welcome test subject # 15042 to the Science Culture Activities Learning Environement. S.C.A.L.E for short", 0.05, 2, 0.01)
